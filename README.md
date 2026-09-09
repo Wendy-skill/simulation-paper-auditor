@@ -1,8 +1,8 @@
 # Simulation Paper Auditor
 
-An evidence-first AI Skill series for checking simulation-based research manuscripts before submission.
+An evidence-first AI Skill series for checking research manuscripts before submission.
 
-The current rules are strongest for **CFD / ANSYS Fluent / CFD-DPM**, while the framework is designed to expand to FEM, COMSOL and other numerical simulation workflows.
+The current technical rules are strongest for **CFD / ANSYS Fluent / CFD-DPM**, while the series also includes broader manuscript-level tools such as journal benchmarking and claim–evidence analysis.
 
 ## Available Skills
 
@@ -25,18 +25,6 @@ Path: `skills/fluent-setting-checker/`
 
 Cross-checks the manuscript Methods against the actual ANSYS Fluent setup.
 
-Typical checks include:
-
-- turbulence model;
-- steady / transient formulation;
-- boundary conditions;
-- discretisation schemes;
-- pressure–velocity coupling;
-- convergence criteria;
-- time-step settings;
-- DPM settings;
-- UDF / script-controlled settings.
-
 Core rule:
 
 > **Missing evidence is not a mismatch.**
@@ -45,21 +33,11 @@ Core rule:
 
 Path: `skills/physics-sanity-check/`
 
-Checks whether simulation results, contours, trends and physical explanations are actually plausible.
-
-It separates **observation** from **mechanism** and asks what evidence is required before a physical explanation can be treated as supported.
-
-Current specialist references cover:
-
-- CFD flow fields;
-- heat transfer;
-- particle transport / DPM.
+Checks whether simulation results, contours, trends and physical explanations are plausible.
 
 Core rule:
 
 > **Plausible is not proven.**
-
-It also uses a mechanism-evidence ladder from qualitative speculation to strong convergent evidence.
 
 ### 4. Claim–Evidence Checker
 
@@ -67,21 +45,43 @@ Path: `skills/claim-evidence-checker/`
 
 Checks whether the strength and scope of manuscript claims match the evidence actually provided.
 
-It focuses on:
-
-- validation and accuracy claims;
-- causal / mechanistic statements;
-- statistical language;
-- comparative and “optimal” claims;
-- generalisation;
-- novelty language;
-- strong-certainty wording such as `validated`, `accurate`, `robust`, `proves`, `significant` and `superior`.
-
 Core rule:
 
 > **Claim strength must not exceed evidence strength.**
 
-The Skill suggests the minimum necessary wording downgrade when a claim is overstated.
+### 5. Journal Gap Analyzer
+
+Path: `skills/journal-gap-analyzer/`
+
+Builds a benchmark from comparable recent papers in a target journal, then estimates how closely the manuscript aligns with that benchmark.
+
+It compares:
+
+- scope fit;
+- novelty framing;
+- methodological evidence;
+- results depth;
+- discussion depth;
+- literature positioning;
+- claim calibration;
+- reproducibility;
+- visual / quantitative communication;
+- journal writing architecture.
+
+Key outputs include:
+
+- Relative Journal Fit;
+- Benchmark Confidence;
+- Top Gaps;
+- Closest Fixes;
+- No-Change Zone;
+- section-by-section distance analysis.
+
+Important rule:
+
+> **Journal distance is not acceptance probability.**
+
+A score such as `72/100` describes relative alignment with the constructed benchmark. It does not mean a 72% chance of acceptance.
 
 ## Shared reliability rules
 
@@ -99,15 +99,12 @@ They must not invent solver settings, mesh information, validation results, nume
 simulation-paper-auditor/
 ├── SKILL.md
 ├── references/
-│   ├── cfd.md
-│   ├── cfd-dpm.md
-│   └── validation.md
 ├── templates/
-│   └── audit-report.md
 └── skills/
     ├── fluent-setting-checker/
     ├── physics-sanity-check/
-    └── claim-evidence-checker/
+    ├── claim-evidence-checker/
+    └── journal-gap-analyzer/
 ```
 
 ## Recommended use in Codex
@@ -141,18 +138,13 @@ Use $claim-evidence-checker to audit the manuscript.
 Find claims whose strength or scope exceeds the evidence and suggest the minimum necessary wording change.
 ```
 
-## Recommended inputs
+Journal distance:
 
-Depending on the Skill, useful inputs include:
-
-- manuscript;
-- figures and tables;
-- supplementary material;
-- Fluent / solver report;
-- mesh report;
-- residual history;
-- journal or script files;
-- UDFs or custom numerical settings.
+```text
+Use $journal-gap-analyzer to compare this manuscript with recent comparable papers from the target journal.
+Build the Journal Benchmark first, then identify the largest gaps and highest-leverage fixes.
+Do not interpret the fit score as acceptance probability.
+```
 
 ## Planned series
 
