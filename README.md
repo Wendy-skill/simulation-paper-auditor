@@ -1,12 +1,16 @@
 # Simulation Paper Auditor
 
-An evidence-first AI Skill for checking simulation-based research manuscripts before submission.
+An evidence-first AI Skill series for checking simulation-based research manuscripts before submission.
 
-The current rules are strongest for **CFD / ANSYS Fluent / CFD-DPM**, while the core framework is designed to expand to FEM, COMSOL and other numerical simulation workflows.
+The current rules are strongest for **CFD / ANSYS Fluent / CFD-DPM**, while the framework is designed to expand to FEM, COMSOL and other numerical simulation workflows.
 
-## What it checks
+## Available Skills
 
-The Skill focuses on six areas that commonly affect simulation-paper credibility:
+### 1. Simulation Paper Auditor
+
+The core pre-submission audit Skill.
+
+It focuses on six areas that commonly affect simulation-paper credibility:
 
 1. mesh and numerical resolution;
 2. boundary conditions and physical models;
@@ -23,23 +27,60 @@ It also includes:
 - submission-readiness assessment;
 - an action plan separating quick fixes, analysis fixes and cases where new simulation may be justified.
 
+### 2. Fluent Setting Checker
+
+Path: `skills/fluent-setting-checker/`
+
+This Skill cross-checks the manuscript Methods section against the actual ANSYS Fluent setup.
+
+It can compare:
+
+- turbulence models;
+- steady / transient formulation;
+- solver type;
+- mesh information;
+- boundary conditions;
+- discretisation schemes;
+- pressure–velocity coupling;
+- convergence criteria;
+- time-step settings;
+- DPM / particle settings;
+- UDF / script-controlled settings.
+
+Its core rule is:
+
+> **Missing evidence is not a mismatch.**
+
+It first extracts manuscript settings and Fluent settings independently, then compares them. This helps distinguish a true configuration conflict from a reporting gap or an unverifiable item.
+
+Example:
+
+```text
+Manuscript:
+Turbulence model = SST k-ω
+
+Fluent production case:
+Turbulence model = Realizable k-ε
+
+Status:
+Critical mismatch
+```
+
 ## Evidence-first rule
 
-The core reliability rule is:
+The core reliability rule across this repository is:
 
 > **Not reported ≠ not performed.**
 
-The Skill must first identify what evidence is actually present in the manuscript or supplied files. If something cannot be confirmed, it should use labels such as:
+The Skills must first identify what evidence is actually present in the manuscript or supplied files. If something cannot be confirmed, they should use labels such as:
 
 - `Not reported`
 - `Not identified in supplied material`
 - `Unable to verify`
 
-It must not invent missing solver settings, mesh information, validation results, numerical parameters or journal requirements.
+They must not invent missing solver settings, mesh information, validation results, numerical parameters or journal requirements.
 
-## Progressive loading
-
-The Skill is split into a compact core plus specialist references:
+## Repository structure
 
 ```text
 simulation-paper-auditor/
@@ -48,11 +89,17 @@ simulation-paper-auditor/
 │   ├── cfd.md
 │   ├── cfd-dpm.md
 │   └── validation.md
-└── templates/
-    └── audit-report.md
+├── templates/
+│   └── audit-report.md
+└── skills/
+    └── fluent-setting-checker/
+        ├── SKILL.md
+        ├── references/
+        │   └── dpm.md
+        ├── templates/
+        │   └── consistency-report.md
+        └── README.md
 ```
-
-CFD rules are loaded only for CFD studies. CFD-DPM rules are loaded only when particle tracking is present. This keeps the core workflow compact and reduces unnecessary context use when reviewing long manuscripts.
 
 ## CFD / Fluent coverage
 
@@ -72,7 +119,7 @@ The rules deliberately avoid treating common recommendations as universal laws. 
 
 ## CFD-DPM coverage
 
-When DPM or Lagrangian particle tracking is detected, the Skill additionally checks:
+When DPM or Lagrangian particle tracking is detected, the Skills can additionally check:
 
 - particle size, density and injection definition;
 - one-way / two-way coupling;
@@ -85,6 +132,8 @@ When DPM or Lagrangian particle tracking is detected, the Skill additionally che
 
 ## Recommended use in Codex
 
+For the main audit:
+
 ```text
 Use $simulation-paper-auditor to audit this manuscript.
 
@@ -93,17 +142,19 @@ Do not infer that a method was not performed merely because it is not reported.
 Prioritise methodology, numerical credibility and reviewer risks over language editing.
 ```
 
-For CFD-DPM:
+For the Fluent consistency check:
 
 ```text
-This is a CFD-DPM study. Load the CFD and CFD-DPM specialist references.
-Pay particular attention to validation scope, particle-wall interaction,
-force models, coupling assumptions and deposition credibility.
+Use $fluent-setting-checker to compare the manuscript Methods with the supplied Fluent files.
+
+Extract manuscript and Fluent settings independently before comparing them.
+Do not treat missing evidence as a mismatch.
+Identify the production run before flagging configuration conflicts.
 ```
 
 ## Recommended inputs
 
-For the strongest audit, provide as many of these as available:
+For the strongest checks, provide as many of these as available:
 
 - manuscript;
 - figures and tables;
@@ -114,17 +165,13 @@ For the strongest audit, provide as many of these as available:
 - journal or script files;
 - UDFs or custom numerical settings where relevant.
 
-A text-only audit is still useful, but checks that depend on figures or solver files should remain `Unable to verify` when those materials are unavailable.
+## Planned series
 
-## Planned extensions
-
-The repository is designed to grow into a broader simulation-paper auditing series, including:
+Next modules may include:
 
 - Reviewer View;
 - Claim–Evidence Checker;
 - Physics Sanity Check;
-- Fluent Setting Checker;
-- manuscript-vs-solver consistency checking;
 - FEM specialist rules;
 - COMSOL specialist rules.
 
