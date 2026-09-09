@@ -8,77 +8,90 @@ The current rules are strongest for **CFD / ANSYS Fluent / CFD-DPM**, while the 
 
 ### 1. Simulation Paper Auditor
 
-The core pre-submission audit Skill.
+Core pre-submission audit for:
 
-It focuses on six areas that commonly affect simulation-paper credibility:
+- mesh and numerical resolution;
+- boundary conditions and physical models;
+- convergence and solver settings;
+- verification and validation;
+- physical plausibility;
+- reproducibility and reporting completeness.
 
-1. mesh and numerical resolution;
-2. boundary conditions and physical models;
-3. convergence and solver settings;
-4. verification and validation;
-5. physical plausibility;
-6. reproducibility and reporting completeness.
-
-It also includes:
-
-- an Evidence Map;
-- claim–evidence checks for words such as `validated`, `accurate` and `robust`;
-- reviewer-risk prediction;
-- submission-readiness assessment;
-- an action plan separating quick fixes, analysis fixes and cases where new simulation may be justified.
+It also produces an Evidence Map, reviewer-risk assessment, claim–evidence check, submission-readiness assessment and action plan.
 
 ### 2. Fluent Setting Checker
 
 Path: `skills/fluent-setting-checker/`
 
-This Skill cross-checks the manuscript Methods section against the actual ANSYS Fluent setup.
+Cross-checks the manuscript Methods against the actual ANSYS Fluent setup.
 
-It can compare:
+Typical checks include:
 
-- turbulence models;
+- turbulence model;
 - steady / transient formulation;
-- solver type;
-- mesh information;
 - boundary conditions;
 - discretisation schemes;
 - pressure–velocity coupling;
 - convergence criteria;
 - time-step settings;
-- DPM / particle settings;
+- DPM settings;
 - UDF / script-controlled settings.
 
-Its core rule is:
+Core rule:
 
 > **Missing evidence is not a mismatch.**
 
-It first extracts manuscript settings and Fluent settings independently, then compares them. This helps distinguish a true configuration conflict from a reporting gap or an unverifiable item.
+### 3. Physics Sanity Check
 
-Example:
+Path: `skills/physics-sanity-check/`
 
-```text
-Manuscript:
-Turbulence model = SST k-ω
+Checks whether simulation results, contours, trends and physical explanations are actually plausible.
 
-Fluent production case:
-Turbulence model = Realizable k-ε
+It separates **observation** from **mechanism** and asks what evidence is required before a physical explanation can be treated as supported.
 
-Status:
-Critical mismatch
-```
+Current specialist references cover:
 
-## Evidence-first rule
+- CFD flow fields;
+- heat transfer;
+- particle transport / DPM.
 
-The core reliability rule across this repository is:
+Core rule:
+
+> **Plausible is not proven.**
+
+It also uses a mechanism-evidence ladder from qualitative speculation to strong convergent evidence.
+
+### 4. Claim–Evidence Checker
+
+Path: `skills/claim-evidence-checker/`
+
+Checks whether the strength and scope of manuscript claims match the evidence actually provided.
+
+It focuses on:
+
+- validation and accuracy claims;
+- causal / mechanistic statements;
+- statistical language;
+- comparative and “optimal” claims;
+- generalisation;
+- novelty language;
+- strong-certainty wording such as `validated`, `accurate`, `robust`, `proves`, `significant` and `superior`.
+
+Core rule:
+
+> **Claim strength must not exceed evidence strength.**
+
+The Skill suggests the minimum necessary wording downgrade when a claim is overstated.
+
+## Shared reliability rules
+
+Across the series:
 
 > **Not reported ≠ not performed.**
 
-The Skills must first identify what evidence is actually present in the manuscript or supplied files. If something cannot be confirmed, they should use labels such as:
+The Skills distinguish missing evidence, reporting gaps, true contradictions and unsupported claims.
 
-- `Not reported`
-- `Not identified in supplied material`
-- `Unable to verify`
-
-They must not invent missing solver settings, mesh information, validation results, numerical parameters or journal requirements.
+They must not invent solver settings, mesh information, validation results, numerical parameters, statistics or journal requirements.
 
 ## Repository structure
 
@@ -92,69 +105,45 @@ simulation-paper-auditor/
 ├── templates/
 │   └── audit-report.md
 └── skills/
-    └── fluent-setting-checker/
-        ├── SKILL.md
-        ├── references/
-        │   └── dpm.md
-        ├── templates/
-        │   └── consistency-report.md
-        └── README.md
+    ├── fluent-setting-checker/
+    ├── physics-sanity-check/
+    └── claim-evidence-checker/
 ```
-
-## CFD / Fluent coverage
-
-The CFD module checks topics such as:
-
-- mesh independence and spatial resolution;
-- y+ and near-wall treatment where relevant;
-- local refinement;
-- domain size and boundary-condition provenance;
-- turbulence-model justification;
-- residual and physical-monitor convergence;
-- discretisation schemes;
-- transient time-step independence;
-- separation, recirculation and other physical-plausibility indicators.
-
-The rules deliberately avoid treating common recommendations as universal laws. For example, the Skill does **not** automatically require exactly three meshes, GCI for every CFD paper, or y+ = 1 for every SST k-ω simulation.
-
-## CFD-DPM coverage
-
-When DPM or Lagrangian particle tracking is detected, the Skills can additionally check:
-
-- particle size, density and injection definition;
-- one-way / two-way coupling;
-- turbulent dispersion;
-- force-model justification;
-- particle-wall interaction;
-- deposition criteria;
-- particle-number sensitivity;
-- the actual validation scope of particle/deposition predictions.
 
 ## Recommended use in Codex
 
-For the main audit:
+Main audit:
 
 ```text
 Use $simulation-paper-auditor to audit this manuscript.
-
 First build the Evidence Map.
-Do not infer that a method was not performed merely because it is not reported.
 Prioritise methodology, numerical credibility and reviewer risks over language editing.
 ```
 
-For the Fluent consistency check:
+Fluent consistency:
 
 ```text
 Use $fluent-setting-checker to compare the manuscript Methods with the supplied Fluent files.
-
 Extract manuscript and Fluent settings independently before comparing them.
-Do not treat missing evidence as a mismatch.
-Identify the production run before flagging configuration conflicts.
+```
+
+Physics check:
+
+```text
+Use $physics-sanity-check to review the Results and Discussion.
+Separate direct observations from physical explanations and identify alternative mechanisms.
+```
+
+Claim check:
+
+```text
+Use $claim-evidence-checker to audit the manuscript.
+Find claims whose strength or scope exceeds the evidence and suggest the minimum necessary wording change.
 ```
 
 ## Recommended inputs
 
-For the strongest checks, provide as many of these as available:
+Depending on the Skill, useful inputs include:
 
 - manuscript;
 - figures and tables;
@@ -163,16 +152,15 @@ For the strongest checks, provide as many of these as available:
 - mesh report;
 - residual history;
 - journal or script files;
-- UDFs or custom numerical settings where relevant.
+- UDFs or custom numerical settings.
 
 ## Planned series
 
-Next modules may include:
+Possible next modules:
 
 - Reviewer View;
-- Claim–Evidence Checker;
-- Physics Sanity Check;
 - FEM specialist rules;
-- COMSOL specialist rules.
+- COMSOL specialist rules;
+- manuscript-vs-solver automated consistency workflow.
 
 Created by **Wendy.z**.
