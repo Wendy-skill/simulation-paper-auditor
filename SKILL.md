@@ -6,6 +6,7 @@ description: >
   verification and validation, physical plausibility, reproducibility, and claim strength.
   Strongest support is for CFD/ANSYS Fluent and CFD-DPM; extensible to FEM, COMSOL and multiphysics.
 version: 1.0
+  中文触发：仿真论文审稿、网格独立性、数值验证；English triggers: simulation paper audit, numerical verification.
 ---
 
 # Simulation Paper Auditor
@@ -297,3 +298,8 @@ Designed to support future modules such as:
 - fem-specialist
 - comsol-specialist
 - manuscript-vs-solver-consistency-check
+
+## Optional v3 research-group interface
+
+This Skill remains independently usable. When the user requests cross-Skill work or a located finding genuinely needs another specialist, read `references/research-group-interop-v3.md` on demand. Own **Simulation methodology, mesh/time-step, convergence and verification/validation**; do not silently take over **Solver configuration correspondence without actual Fluent files, or all-purpose writing edits**. Never pretend a named tool or Skill was invoked. Reuse evidence with source/version, keep one issue owner, and return a short handoff record rather than a duplicate full audit.
+
