@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this Skill, please cite it using these metadata."
+type: software
+title: "Simulation Paper Auditor"
+authors:
+  - given-names: "wendy.z"
+    alias: "Wendy-skill"
+abstract: >-
+  An evidence-first AI Skill for checking simulation-based research manuscripts before submission.
+repository-code: "https://github.com/Wendy-skill/simulation-paper-auditor"
+license: Apache-2.0
